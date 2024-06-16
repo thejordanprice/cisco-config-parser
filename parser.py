@@ -29,6 +29,13 @@ def parse_cisco_config(filename):
                 key = match.group(1)
                 value = match.group(2)
                 config['interfaces'][current_interface][key] = value
+        else:
+            # Handle standalone configurations
+            standalone_match = re.match(r'^(no aaa new-model|switch \d+ provision .+|mls qos .+|spanning-tree .+|auto qos .+|vlan .+)$', line)
+            if standalone_match:
+                if 'standalone_configs' not in config:
+                    config['standalone_configs'] = []
+                config['standalone_configs'].append(line)
 
     return config
 
